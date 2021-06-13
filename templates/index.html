@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load leaflet_tags %}
+{% block body %}
+
+
+{% leaflet_js %}
+{% leaflet_css %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+<script src="{% static 'dist/leaflet.ajax.js' %}"></script>
+
+<h1 class="title">ORM MAP Project</h1>
+<script type="text/javascript" src="{% static 'js/index.js'%}"></script>
+
+{% leaflet_map "map" callback="window.our_layers" %}
+
+<h1 class="title">Son Eklenen Kayıtlar</h1>
+
+<table class="ui selectable inverted blue table">
+  <thead>
+    <tr>
+      <th>Yer Adı</th>
+      <th class="center aligned">Latitude</th>
+      <th class="right aligned">Longitude</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for data in datas %}
+    <tr>
+      <td>{{data.name}}</td>
+      <td class="center aligned">{{data.lat}}</td>
+      <td class="right aligned">{{data.long}}</td>
+    </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+
+<a href="yer_ekle/" class="ui inverted primary right floated big button ">Yer Ekle</a>
+<a class="ui inverted violet button right floated big" href="/kayitlar/">Tüm Kayıtlar</a>
+
+
+
+{% endblock body %}

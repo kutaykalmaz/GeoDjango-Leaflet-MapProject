@@ -1,0 +1,57 @@
+body {
+    
+    background: #4b4e50;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #1b2631, #4b4e50);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #1b2631, #4b4e50); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    
+}
+
+.title {
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    font-size: 50px;
+    padding-top: 25px !important;
+    margin-bottom: 75px;
+    color: white;
+
+}
+
+.form-content {
+    padding-top: 25px;
+    height: 1000px;
+}
+
+.ui.button {
+    margin-top: 50px;
+}
+
+.ui.input {
+    margin-bottom: 50px;
+}
+
+#id_location-map{
+    height: 500px;
+}
+
+.icon.input input {
+    font-size: 20px !important;
+}
+
+.ui.icon.message {
+    font-size: 16px;
+    width: 25%;
+    margin: 0 auto;
+    position: relative;
+}
+
+.field>label {
+    font-size: 20px !important;
+    color: white !important;
+    text-align: center;
+    margin-bottom: 20px !important;
+}
+
+.ui.warning.message {
+    font-size: 20px;
+    text-align: center;
+}

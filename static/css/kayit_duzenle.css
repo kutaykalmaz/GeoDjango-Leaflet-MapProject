@@ -1,0 +1,38 @@
+body {
+    background-image: linear-gradient( 112.1deg,  rgb(13, 16, 24) 11.4%, rgb(23, 27, 43) 70.2% );
+    color: white !important;
+}
+
+.update-content {
+    text-align: center;
+}
+
+.update-label {
+    font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+    font-size: 30px !important;
+    margin-bottom: 40px !important;
+    color: white !important;
+}
+
+.field, .form-item {
+    margin-bottom: 40px !important;
+}
+
+.ui.input {
+    display: block;
+}
+
+#id_name, #lat, #long {
+    text-align: center;
+    font-size: 22px;
+}
+
+.title {
+    text-align: center;
+    font-size: 75px;
+    padding-top: 50px !important;
+    margin-bottom: 75px;
+}
+
+
+

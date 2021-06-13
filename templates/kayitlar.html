@@ -1,0 +1,260 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block body %}
+
+<link rel="stylesheet" href="{% static 'css/kayitlar.css' %}">
+
+<div class="kayit-content">
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="ui success message transition {{ message.tags }}">
+        <div class="header">
+            {{message}}
+        </div>
+        Tablodan kaydınızı kontrol edebilirsiniz.
+    </div>
+    {% endfor %}
+    {% endif %}
+    <h1 class="title">Kayıtlar</h1>
+    <div class="search-content">
+        <button class="circular ui icon button big" id="searchBackButton">
+            <i class="icon left arrow"></i>
+        </button>
+
+        <select class="ui fluid search dropdown">
+            <option value="">Ara</option>
+            {% for kayit in kayitlar %}
+            <option value="{{kayit}}">{{kayit}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+
+
+
+    <table class="ui celled padded table">
+        <thead>
+            <tr>
+                <th>Yer Adı</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody id="posts">
+            {% for i in first_page %}
+            <tr>
+                <td>{{i.name}}</td>
+                <td>{{i.lat}}</td>
+                <td>{{i.long}}</td>
+                <td>
+                    <a href="/kayitlar/duzenle/{{i.id}}">
+                        <i class="far fa-edit"></i>
+                    </a>
+                    <a href="/kayitlar/sil/{{i.id}}">
+                        <i class="fas fa-trash-alt error"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination-data">
+        <div role="navigation" class="ui pagination menu">
+            {% for i in page_range %}
+            <a href="{{i}}" class="item">{{i}}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    </table>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.js"></script>
+
+<script>
+
+    $('.ui.fluid.search.dropdown').dropdown({
+        forceSelection: false,
+    });
+
+
+    $('a.item').click(function (event) {
+        event.preventDefault();
+        var page_n = $(this).attr('href');
+        // ajax
+        $.ajax({
+            type: "POST",
+            url: "{% url 'kayitlar' %}", // name of url
+            data: {
+                page_n: page_n, //page_number
+
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function (resp) {
+                //loop
+                $('#posts').html('')
+                $.each(resp.results, function (i, val) {
+                    //apending posts
+                    $('#posts').append(`
+                    <tr>
+                        <td>${val.name}</td>
+                        <td>${val.lat}</td>
+                        <td>${val.long}</td>
+                        <td>
+                            <a href="/kayitlar/duzenle/${val.id}">
+                                <i class="far fa-edit"></i>
+                            </a>
+                            <a href="/kayitlar/sil/${val.id}">
+                                <i class="fas fa-trash-alt error"></i>
+                            </a>
+                        </td>
+                    </tr>`
+                    )
+                });
+            },
+            error: function () { }
+        }); // 
+    });
+
+
+
+
+    var data = '{{datas}}';
+    var dataLen = '{{datas|length}}';
+    console.log(data.type);
+    var rdata = JSON.parse(data.replace(/&#x27;/g, '"'));
+    let filteredArr = []
+    //$('#posts').html('');
+    var posts = document.getElementById('posts');
+
+    $('div.item').on('click', function () {
+        filteredArr = rdata.filter(info => info['name'].includes($(this).text()));
+        //console.log($(this).text());
+        if (filteredArr.length > 0) {
+            posts.innerHTML = "";
+            filteredArr.map(info => {
+                posts.innerHTML += `<tr>
+                    <td>${info['name']}</td>
+                    <td>${info['lat']}</td>
+                    <td>${info['long']}</td>
+                    <td>
+                        <a href="/kayitlar/duzenle/${info['id']}">
+                            <i class="far fa-edit"></i>
+                        </a>
+                        <a href="/kayitlar/sil/${info['id']}">
+                            <i class="fas fa-trash-alt error"></i>
+                        </a>
+                    </td>
+                </tr>`
+            })
+        }
+
+    });
+
+    $('input.search').on('keyup', function (e) {
+        if (e.keyCode === 13) {
+            filteredArr = rdata.filter(info => info['name'].includes($('div.text').text()));
+            //console.log(filteredArr);
+            if (filteredArr.length > 0) {
+                posts.innerHTML = "";
+                filteredArr.map(info => {
+                    posts.innerHTML += `<tr>
+                        <td>${info['name']}</td>
+                        <td>${info['lat']}</td>
+                        <td>${info['long']}</td>
+                        <td>
+                            <a href="/kayitlar/duzenle/${info['id']}">
+                                <i class="far fa-edit"></i>
+                            </a>
+                            <a href="/kayitlar/sil/${info['id']}">
+                                <i class="fas fa-trash-alt error"></i>
+                            </a>
+                        </td>
+                    </tr>`
+                })
+            }
+        }
+
+    });
+
+
+    $('input.search').on('input', function (e) {
+        //console.log(e.target.value);
+        filteredArr = rdata.filter(info => info['name'].includes(e.target.value));
+
+        console.log(filteredArr);
+        if (filteredArr.length == dataLen) {
+            posts.innerHTML = "";
+            for (let i = 0; i < 5; i++) {
+                posts.innerHTML += `<tr>
+                    <td>${filteredArr[i].name}</td>
+                    <td>${filteredArr[i].lat}</td>
+                    <td>${filteredArr[i].long}</td>
+                    <td>
+                        <a href="/kayitlar/duzenle/${filteredArr[i].id}">
+                            <i class="far fa-edit"></i>
+                        </a>
+                        <a href="/kayitlar/sil/${filteredArr[i].id}">
+                            <i class="fas fa-trash-alt error"></i>
+                        </a>
+                    </td>
+                </tr>`
+                //console.log(filteredArr[i]);
+            }
+        } else if (filteredArr.length > 0) {
+            posts.innerHTML = "";
+            filteredArr.map(info => {
+                posts.innerHTML += `<tr>
+                    <td>${info['name']}</td>
+                    <td>${info['lat']}</td>
+                    <td>${info['long']}</td>
+                    <td>
+                        <a href="/kayitlar/duzenle/${info['id']}">
+                            <i class="far fa-edit"></i>
+                        </a>
+                        <a href="/kayitlar/sil/${info['id']}">
+                            <i class="fas fa-trash-alt error"></i>
+                        </a>
+                    </td>
+                </tr>`
+            })
+        }
+    });
+
+    $('#searchBackButton').on('click', function () {
+        posts.innerHTML = "";
+        for (let i = 0; i < 5; i++) {
+            posts.innerHTML += `<tr>
+                    <td>${rdata[i].name}</td>
+                    <td>${rdata[i].lat}</td>
+                    <td>${rdata[i].long}</td>
+                    <td>
+                        <a href="/kayitlar/duzenle/${rdata[i].id}">
+                            <i class="far fa-edit"></i>
+                        </a>
+                        <a href="/kayitlar/sil/${rdata[i].id}">
+                            <i class="fas fa-trash-alt error"></i>
+                        </a>
+                    </td>
+                </tr>`
+        }
+    });
+
+    setTimeout(function () {
+        $('.ui.success.message').transition('fade down');
+    }, 5000);
+
+
+
+
+
+</script>
+
+{% endblock body %}

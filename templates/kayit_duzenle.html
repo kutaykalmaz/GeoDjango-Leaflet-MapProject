@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load leaflet_tags %}
+
+{% block body %}
+{% leaflet_js plugins="forms" %}
+{% leaflet_css plugins="forms" %}
+
+<link rel="stylesheet" href="{% static 'css/kayit_duzenle.css' %}">
+
+<div class="update-content">
+    <h1 class="title">Kayıt Güncelle</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="ui form">
+            <div class="three fields">
+                <div class="field">
+                    <label class="update-label">Yer Adı</label>
+                    {{form.name}}
+                </div>
+                <div class="field">
+                    <label for="name" class="update-label">Latitude</label>
+                    <input type="text" readonly id="lat" value="{{kayit.lat}}">
+                </div>
+                <div class="field">
+                    <label for="name" class="update-label">Longitude</label>
+                    <input type="text" readonly id="long" value="{{kayit.long}}">
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="form-item">
+            <label for="name" class="update-label">Konum</label>
+            {{form.location}}
+        </div>
+
+        <button class="ui primary button big" type="submit">
+            Güncelle
+        </button>
+    </form>
+
+
+</div>
+
+<script>
+
+    var lat = document.getElementById('lat');
+    var long = document.getElementById('long');
+
+
+    window.addEventListener("map:init", function (e) {
+        const map = e.detail.map;
+        var detail = e.detail;
+        googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        });
+        googleStreets.addTo(detail.map);
+
+        map.on('mousedown', function (e) {
+            lat.value = Number(e.latlng.lat.toFixed(6));
+            long.value = Number(e.latlng.lng.toFixed(6));
+        });
+
+    }, false);
+</script>
+
+
+{% endblock body %}

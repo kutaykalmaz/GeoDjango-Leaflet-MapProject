@@ -1,0 +1,65 @@
+body {
+    background-image: linear-gradient( 94.3deg,  rgba(26,33,64,1) 10.9%, rgba(81,84,115,1) 87.1% );
+    color: white;
+}
+
+.title {
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    font-size: 75px;
+    padding-top: 25px !important;
+    margin-bottom: 75px;
+
+}
+
+.pagination-data {
+    text-align: center !important;
+}
+
+.ui.pagination {
+    font-size: 22px;
+}
+
+.ui.celled.padded.table {
+    font-size: 22px;
+}.i
+
+.ui.search.selection.dropdown {
+    font-size: 18px;
+}
+
+.ui.dropdown .menu >.item {
+    font-size: 18px;
+}
+
+.ui.fluid.search.dropdown.selection {
+    width: 25%;
+    display: inline-block;
+    font-size: 18px;
+}
+
+.search-content {
+    text-align: center;
+}
+
+table {
+    text-align: center !important;
+}
+
+.far.fa-edit {
+    color: #4686ff;
+}
+
+.fas.fa-trash-alt {
+    color: #DE3163;
+    margin-left: 10px;
+}
+
+.ui.success.message {
+    font-size: 20px;
+    text-align: center;
+}
+
+.kayit-content {
+    padding-top: 50px;
+}

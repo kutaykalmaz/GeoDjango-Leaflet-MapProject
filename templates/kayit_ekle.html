@@ -1,0 +1,163 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load leaflet_tags %}
+{% block body %}
+
+{% leaflet_js plugins="forms" %}
+{% leaflet_css plugins="forms" %}
+
+<link rel="stylesheet" href="{% static 'css/kayit_ekle.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css"
+    integrity="sha512-f8gN/IhfI+0E9Fc/LKtjVq4ywfhYAVeMGKsECzDUHcFJ5teVwvKTqizm+5a84FINhfrgdvjX8hEJbem2io1iTA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+
+<div class="form-content container">
+    
+
+    {% if messages %}
+        {% for message in messages %}
+        <div class="ui warning message transition {{ message.tags }}">
+            <i class="close icon"></i>
+            <div class="header">
+              Bir hata meydana geldi!
+            </div>
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <h1 class="title">Yer Ekle</h1>
+
+    <form method="POST" id="form-id" onsubmit="submitcancel();">
+        {% csrf_token %}
+
+        <div class="ui form">
+            <div class="three fields">
+                <div class="field">
+                    <label>Yer Adı</label>
+                    <div class="ui left icon input">
+                        <input type="text" name="name" maxlength="128" required id="id_name">
+                        <i class="fas fa-map-pin icon"></i>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Latitude</label>
+                    <div class="ui left icon input">
+                        <input type="text" id="lat" readonly>
+                        <i class="fas fa-map-marker-alt icon"></i>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Longitude</label>
+                    <div class="ui left icon input">
+                        <input type="text" id="long" readonly>
+                        <i class="fas fa-map-marker-alt icon"></i>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="map">
+                {{form.location}}
+            </div>
+
+            <button class="ui inverted button big right floated" id = "submitButton">Kaydet</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"
+    integrity="sha512-dqw6X88iGgZlTsONxZK9ePmJEFrmHwpuMrsUChjAw1mRUhUITE5QU9pkcSox+ynfLhL15Sv2al5A0LVyDCmtUw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"
+    integrity="sha512-MqEDqB7me8klOYxXXQlB4LaNf9V9S0+sG1i8LtPOYmHqICuEZ9ZLbyV3qIfADg2UJcLyCm4fawNiFvnYbcBJ1w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script>
+
+
+    var lat = document.getElementById('lat');
+    var long = document.getElementById('long');
+
+
+    window.addEventListener("map:init", function (e) {
+        const map = e.detail.map;
+        var detail = e.detail;
+        googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        });
+        googleStreets.addTo(detail.map);
+
+        map.on('mousedown', function (e) {
+            lat.value = Number(e.latlng.lat.toFixed(7));
+            long.value = Number(e.latlng.lng.toFixed(7));
+        });
+
+    }, false);
+
+
+
+    var form = document.getElementById('form-id');
+
+    $('#submitButton').on('click', function(e){
+        var nameVal;
+
+        $('#id_name').on('focusout',function(e){
+            nameVal = e.target.value;
+        })
+
+        if (lat.value != '' && long.value != '' && nameVal != '') {
+            e.preventDefault();
+            swal({
+                title: "Kayıt başarıyla oluşturuldu!",
+                text: "Yönlendirme yapılıyor.",
+                type: "success",
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Tamam',
+            });
+
+            
+            setTimeout(function () {
+                form.submit();
+            }, 3000);
+        }
+    })
+
+    function sweetalerclick() {
+
+        $('#id_name').on('focusout',function(e){
+            var nameVal = e.target.value;
+        })
+
+        if (lat.value != '' && long.value != '' && nameVal != '') {
+            event.preventDefault();
+
+            swal({
+                title: "Kayıt başarıyla oluşturuldu!",
+                text: "Yönlendirme yapılıyor.",
+                type: "success",
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Tamam',
+            });
+
+            
+            setTimeout(function () {
+                form.submit();
+            }, 3000);
+        }
+    }
+
+    $('.close.icon').click(function(){
+        $('.ui.warning.message').transition('fade down');
+    })
+
+</script>
+
+
+
+
+{% endblock body %}
