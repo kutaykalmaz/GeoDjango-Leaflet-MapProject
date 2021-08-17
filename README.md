@@ -1,2 +1,2 @@
 # GeoDjango Leaflet Map Project
-Django Framework prepared for Python language was used in the project. GDAL was used to get location information and PostgreSQL with PostGis extension was used as database. HTML, CSS, Javascript, Bootstrap and Semantic UI, SweatyAlert Javascript libraries were used for the interface design, and the Javascript libraries Leaflet and Leaflet Ajax were used for the map.
+Django Framework prepared for Python language used in the project. GDAL used to get location information and PostgreSQL with PostGis extension used as database. HTML, CSS, Javascript, Bootstrap and Semantic UI, SweatyAlert Javascript libraries used for the user interface design, and the Javascript libraries Leaflet and Leaflet Ajax used for the map.
